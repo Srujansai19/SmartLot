@@ -6,9 +6,12 @@ from datetime import datetime  # For logging
 import pandas as pd  # For ML
 from bson import json_util  # For ML
 from prophet import Prophet  # For ML Forecasting
+from dotenv import load_dotenv
 
 # --- CONFIGURATION ---
-MONGO_URL = "mongodb+srv://srinivasm0860_db_user:s123@smartlotslots.bjz0jbz.mongodb.net/?appName=Smartlotslots"
+load_dotenv()
+
+MONGO_URL = os.getenv("MONGO_URL")
 
 if not MONGO_URL:
     print("Error: MONGO_URL environment variable is not set.")
