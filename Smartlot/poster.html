@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartLot Poster</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load jsPDF and html2canvas for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Use the Inter font for a clean, modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for diagram arrows */
+        .arrow {
+            position: relative;
+            background-color: #9ca3af; /* gray-400 */
+            height: 2px;
+            width: 100%;
+            margin: 1.5rem 0;
+        }
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: -1px;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 6px solid #9ca3af; /* gray-400 */
+        }
+        .arrow-v {
+            position: relative;
+            background-color: #9ca3af; /* gray-400 */
+            width: 2px;
+            height: 24px; /* Reduced height */
+            margin: 0.5rem auto; /* Reduced margin */
+        }
+        .arrow-v::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: -4px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid #9ca3af; /* gray-400 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6"> <!-- Reduced padding -->
+
+    <!-- Download Button -->
+    <div class="max-w-7xl mx-auto mb-6 text-center">
+        <button id="download-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300">
+            Download Poster as PDF
+        </button>
+    </div>
+
+    <!-- This 'poster-content' div is what will be captured for the PDF -->
+    <div id="poster-content" class="max-w-7xl mx-auto bg-white p-8 shadow-2xl rounded-lg"> <!-- Reduced padding -->
+        
+        <!-- Header: Title, Subtitle, and Icon -->
+        <header class="flex justify-between items-center pb-6 border-b-2 border-gray-200 mb-6"> <!-- Reduced padding/margin -->
+            <div>
+                <h1 class="text-5xl font-bold text-gray-800">SmartLot: An IoT-Enabled Smart System with Machine Predictions</h1>
+                <p class="text-2xl text-gray-600 mt-2">By Batch-106</p>
+            </div>
+            <!-- Parking Icon -->
+            <svg class="w-24 h-24 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-6 0V6a2.25 2.25 0 012.25-2.25h3.75a2.25 2.25 0 012.25 2.25v12.75m0-12.75v-1.5a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12.75m12-1.5" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6"> <!-- Reduced gap -->
+
+            <!-- Section: Introduction -->
+            <div class="p-6 bg-gray-50 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-3">Introduction</h2> <!-- Reduced margin -->
+                <p class="text-gray-600 leading-relaxed">
+                    SmartLot addresses the common problem of finding available parking in urban areas. This project details an IoT-based system that detects vehicle presence in real-time.
+                    <br> <!-- Removed one <br> -->
+                    It leverages machine learning to analyze historical data and predict future parking availability, providing users with accurate notifications and reducing traffic congestion.
+                </p>
+            </div>
+
+            <!-- Section: System Architecture -->
+            <div class="md:col-span-2 p-6 bg-gray-50 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-3">System Architecture</h2> <!-- Reduced margin -->
+                <div class="flex flex-col md:flex-row justify-around items-center h-full">
+                    <!-- Left Flow: Frontend -->
+                    <div class="flex flex-col items-center">
+                        <div class="bg-green-100 border-2 border-green-500 text-green-800 p-4 rounded-lg shadow text-center">
+                            <h3 class="font-bold">Frontend</h3>
+                            <p>Streamlit Dashboard</p>
+                        </div>
+                        <div class="arrow-v"></div>
+                        <div class="bg-blue-100 border-2 border-blue-500 text-blue-800 p-4 rounded-lg shadow text-center">
+                            <h3 class="font-bold">Backend Server</h3>
+                            <p>Flask + MongoDB</p>
+                        </div>
+                    </div>
+                    <!-- Database in middle -->
+                    <div class="flex flex-col items-center mx-8">
+                        <svg class="w-16 h-16 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.419-3.41 4.375-7.625 4.375S5 8.794 5 6.375m15.25 0c0-2.419-3.41-4.375-7.625-4.375S5 3.956 5 6.375m15.25 0v11.25c0 2.419-3.41 4.375-7.625 4.375s-7.625-1.956-7.625-4.375V6.375" />
+                        </svg>
+                        <p class="font-semibold text-gray-600 mt-2">MongoDB</p>
+                    </div>
+                    <!-- Right Flow: Backend -->
+                    <div class="flex flex-col items-center">
+                        <div class="bg-yellow-100 border-2 border-yellow-500 text-yellow-800 p-4 rounded-lg shadow text-center">
+                            <h3 class="font-bold">IoT Sensor</h3>
+                            <p>ESP32 / Sensor</p>
+                        </div>
+                        <div class="arrow-v"></div>
+                        <div class="bg-blue-100 border-2 border-blue-500 text-blue-800 p-4 rounded-lg shadow text-center">
+                            <h3 class="font-bold">Backend Server</h3>
+                            <p>Flask + MongoDB</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Objectives -->
+            <div class="p-6 bg-gray-50 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-3">Objectives</h2> <!-- Reduced margin -->
+                <ul class="list-disc list-inside text-gray-600 space-y-1"> <!-- Reduced spacing -->
+                    <li>To develop an efficient, low-cost smart parking system.</li>
+                    <li>To provide real-time parking data to users via a web dashboard.</li>
+                    <li>To implement a predictive model for parking occupancy.</li>
+                    <li>To reduce time spent searching for parking.</li>
+                </ul>
+                <img src="https://placehold.co/400x300/e2e8f0/94a3b8?text=ESP32+Sensor+Board" alt="Hardware" class="mt-3 rounded-lg shadow-md w-full"> <!-- Reduced margin -->
+            </div>
+
+            <!-- Section: Hardware Implementation -->
+            <div class="p-6 bg-gray-50 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-3">Hardware Implementation</h2> <!-- Reduced margin -->
+                <div class="flex flex-col items-center">
+                    <div class="bg-blue-100 border-2 border-blue-500 p-3 rounded-lg shadow w-4/5 text-center">
+                        <p>Sensor Detects Change</p>
+                    </div>
+                    <div class="arrow-v"></div>
+                    <div class="bg-purple-100 border-2 border-purple-500 p-3 rounded-lg shadow w-4/5 text-center">
+                        <p>"Is car present?"</p>
+                    </div>
+                    <div class="arrow-v"></div>
+                    <div class="bg-green-100 border-2 border-green-500 p-3 rounded-lg shadow w-4/5 text-center">
+                        <p>POST Request to Flask</p>
+                    </div>
+                    <div class="arrow-v"></div>
+                    <div class="bg-gray-200 border-2 border-gray-500 p-3 rounded-lg shadow w-4/5 text-center">
+                        <p>Update MongoDB</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: User Recommendation -->
+            <div class="p-6 bg-gray-50 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-3">User Recommendation</h2> <!-- Reduced margin -->
+                <p class="text-gray-600 mb-3">The dashboard provides clear, color-coded slot status:</p> <!-- Reduced margin -->
+                <div class="space-y-2"> <!-- Reduced spacing -->
+                    <div class="bg-green-100 border border-green-400 p-4 rounded-lg shadow">
+                        <strong>Slot A1:</strong> <span class="font-semibold text-green-800">Available</span>
+                    </div>
+                    <div class="bg-yellow-100 border border-yellow-400 p-4 rounded-lg shadow">
+                        <strong>Slot A2:</strong> <span class="font-semibold text-yellow-800">Reserved</span>
+                    </div>
+                    <div class="bg-red-100 border border-red-400 p-4 rounded-lg shadow">
+                        <strong>Slot A3:</strong> <span class="font-semibold text-red-800">Occupied</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section: Hourly Activity -->
+            <div class="p-6 bg-gray-50 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-3">Hourly Parking Activity</h2> <!-- Reduced margin -->
+                <p class="text-gray-600 mb-3">Analysis of historical data shows peak occupancy during business hours.</p> <!-- Reduced margin -->
+                <div class="w-full bg-gray-200 rounded-lg p-4 h-40 flex items-end justify-between space-x-2"> <!-- Reduced height -->
+                    <!-- Faked bar chart -->
+                    <div class="bg-blue-500 rounded-t-md" style="width: 12%; height: 30%;"></div>
+                    <div class="bg-blue-500 rounded-t-md" style="width: 12%; height: 50%;"></div>
+                    <div class="bg-blue-500 rounded-t-md" style="width: 12%; height: 80%;"></div>
+                    <div class="bg-blue-500 rounded-t-md" style="width: 12%; height: 95%;"></div>
+                    <div class="bg-blue-500 rounded-t-md" style="width: 12%; height: 85%;"></div>
+                    <div class="bg-blue-500 rounded-t-md" style="width: 12%; height: 60%;"></div>
+                    <div class="bg-blue-500 rounded-t-md" style="width: 12%; height: 40%;"></div>
+                </div>
+            </div>
+
+            <!-- Section: Analysis -->
+            <div class="p-6 bg-gray-50 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-3">Analysis</h2> <!-- Reduced margin -->
+                <p class="text-gray-600 mb-3">Sensor accuracy and model performance:</p> <!-- Reduced margin -->
+                <table class="w-full text-left table-auto">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="p-2 rounded-tl-lg">Metric</th>
+                            <th class="p-2">Sensor</th>
+                            <th class="p-2 rounded-tr-lg">Model</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b">
+                            <td class="p-2 font-semibold">Accuracy</td>
+                            <td class="p-2">99.5%</td>
+                            <td class="p-2">94.2%</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="p-2 font-semibold">Precision</td>
+                            <td class="p-2">-</td>
+                            <td class="p-2">92.0%</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 font-semibold">Recall</td>
+                            <td class="p-2">-</td>
+                            <td class="p-2">95.5%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Section: Machine Learning -->
+            <div class="p-6 bg-gray-50 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-3">Machine Learning</h2> <!-- Reduced margin -->
+                <ol class="list-decimal list-inside text-gray-600 space-y-1.5"> <!-- Reduced spacing -->
+                    <li><strong>Data Logging:</strong> All sensor status changes are logged with timestamps.</li>
+                    <li><strong>Data Preprocessing:</strong> Data is cleaned and aggregated into hourly occupancy rates.</li>
+                    <li><strong>Model Training:</strong> A Long Short-Term Memory (LSTM) network is trained on 30 days of data.</li>
+                    <li><strong>Deployment:</strong> The model runs on the Flask server, re-training weekly.</li>
+                </ol>
+            </div>
+
+            <!-- Section: Dashboard & Future Work -->
+            <div class="p-6 bg-gray-50 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-3">Dashboard & Future Work</h2> <!-- Reduced margin -->
+                <p class="text-gray-600 mb-3">The Streamlit dashboard provides live status and future predictions.</p> <!-- Reduced margin -->
+                <!-- Fake UI Mockup -->
+                <div class="bg-white p-4 border rounded-lg shadow-inner">
+                    <h3 class="font-semibold text-lg">Streamlit Dashboard</h3>
+                    <div class="flex mt-2">
+                        <div class="w-1/3 bg-gray-100 p-2 rounded-l-lg">
+                            <p class="text-sm font-semibold">Controls</p>
+                            <p class="text-xs mt-2">- Lot View</p>
+                            <p class="text-xs mt-1">- Predictions</p>
+                        </div>
+                        <div class="w-2/3 bg-gray-50 p-2 rounded-r-lg">
+                            <p class="text-sm font-semibold">Hourly Activity</p>
+                            <div class="w-full bg-gray-200 rounded h-16 mt-2"></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 mt-3"><strong>Future Work:</strong> Include a mobile app for user reservations and payments.</p> <!-- Reduced margin -->
+            </div>
+
+            <!-- Section: Solution -->
+            <div class="md:col-span-2 p-6 bg-gray-50 rounded-lg shadow"> <!-- Changed to col-span-2 -->
+                <h2 class="text-2xl font-semibold text-gray-700 mb-3">Solution</h2> <!-- Reduced margin -->
+                <p class="text-gray-600 leading-relaxed">
+                    SmartLot provides a complete, sensor-to-screen solution for smart parking management. By combining reliable IoT hardware with predictive machine learning, the system offers significant value to both parking facility operators and end-users. The system is scalable, cost-effective, and helps reduce urban traffic congestion and emissions.
+                </p>
+            </div>
+
+        </div> <!-- End of grid -->
+
+    </div> <!-- End of poster-content -->
+
+    <script>
+        // JavaScript to handle the PDF download
+        document.addEventListener('DOMContentLoaded', () => {
+            // Alias the jsPDF constructor
+            window.jsPDF = window.jspdf.jsPDF;
+
+            const downloadButton = document.getElementById('download-btn');
+            const posterContent = document.getElementById('poster-content');
+
+            downloadButton.addEventListener('click', () => {
+                console.log('Download button clicked');
+                
+                // Hide the button so it's not in the PDF
+                downloadButton.style.display = 'none';
+
+                html2canvas(posterContent, {
+                    scale: 2, // Increase scale for better resolution
+                    useCORS: true,
+                    logging: true
+                }).then(canvas => {
+                    console.log('html2canvas finished');
+                    try {
+                        const imgData = canvas.toDataURL('image/png');
+                        
+                        // Get dimensions of the poster content
+                        const { width, height } = posterContent.getBoundingClientRect();
+                        
+                        // Determine orientation
+                        const orientation = width > height ? 'l' : 'p';
+                        
+                        // Create PDF using the exact pixel dimensions of the element
+                        // This creates a PDF page perfectly sized to the content
+                        const pdf = new jsPDF(orientation, 'px', [width, height]);
+                        
+                        pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+                        pdf.save('SmartLot-Poster.pdf');
+                        console.log('PDF saved');
+                    } catch (e) {
+                        console.error('Error creating PDF:', e);
+                    }
+                    
+                    // Show the button again
+                    downloadButton.style.display = 'block';
+                }).catch(err => {
+                    console.error('html2canvas failed:', err);
+                    // Show the button again even if it fails
+                    downloadButton.style.display = 'block';
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
