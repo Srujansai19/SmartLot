@@ -2,9 +2,13 @@ import pymongo
 import os
 import random
 from datetime import datetime, timedelta
+from dotenv import load_dotenv\
 
 # --- CONFIGURATION ---
-MONGO_URL = "mongodb+srv://srinivasm0860_db_user:s123@smartlotslots.bjz0jbz.mongodb.net/?appName=Smartlotslots"
+load_dotenv()
+
+MONGO_URL = os.getenv("MONGO_URL")
+
 if not MONGO_URL:
     print("Error: MONGO_URL environment variable is not set.")
     print("Please set it *in this terminal* before running the script.")
